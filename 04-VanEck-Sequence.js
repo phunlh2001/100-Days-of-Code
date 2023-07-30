@@ -1,21 +1,24 @@
 const A1 = parseInt(readline());
 const N = parseInt(readline());
-console.error(A1, N)
 
-const seq = new Array()
-seq.push(A1)
+console.log(vanEckSequence(A1, N))
 
-for (let i = 0; i < N; i++) {
-    let distance = 0
-    let last = seq.pop()
-    if (seq.includes(last)) {
-        let exist = seq.lastIndexOf(last)
-        seq.push(last)
-        distance = (seq.length - 1) - exist
-    } else {
-        seq.push(last)
+function vanEckSequence(init, n) {
+    const map = {}
+    let result = [init]
+
+    for( let i = 0 ; i < n ; i++) {
+        const number = result[i];
+        const position = i + 1;
+        
+        if (map[number] !== undefined) {
+            result.push(position - map[number]);
+        } else {
+           result.push(0);
+        }
+       
+        map[number] = position;
     }
-    seq.push(distance)
-}
 
-console.log(seq[N-1]);
+    return result[n-1]
+}
