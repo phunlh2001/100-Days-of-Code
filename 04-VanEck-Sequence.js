@@ -5,20 +5,20 @@ console.log(vanEckSequence(A1, N))
 
 function vanEckSequence(init, n) {
     const map = {}
-    let result = [init]
+    let arr = [init]
 
     for( let i = 0 ; i < n ; i++) {
-        const number = result[i];
+        const number = arr[i];
         const position = i + 1;
         
         if (map[number] !== undefined) {
-            result.push(position - map[number]);
+            arr.push(position - map[number]);
         } else {
-           result.push(0);
+           arr.push(0);
         }
        
         map[number] = position;
     }
 
-    return result[n-1]
+    return arr[n-1]
 }
