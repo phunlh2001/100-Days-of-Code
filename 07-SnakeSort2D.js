@@ -24,10 +24,10 @@ function lazySnakeEatingOrder(array) {
     
     Object.values(rows).forEach((rowArray, index) => {
         if (index % 2 === 0) {
-            // For even-indexed rows sort in ascending order by cols
+            // ascending order by cols
             rowArray.sort((a, b) => a.cols - b.cols);
         } else {
-            // For odd-indexed rows, sort in descending order by cols
+            // descending order by cols
             rowArray.sort((a, b) => b.cols - a.cols);
         }
     });
