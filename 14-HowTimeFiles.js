@@ -1,8 +1,3 @@
-/**
- * Auto-generated code below aims at helping you parse
- * the standard input according to the problem statement.
- **/
-
 const BEGIN = readline();
 const END = readline();
 console.error(BEGIN, END)
@@ -41,13 +36,13 @@ function dateTimeFormater(beginDate, endDate) {
     
     let totalDays = getTotalDaysPerYear(beginYear, yearDiff) + dayDiff
     
-    for (let i = beginMonth - 1; i < beginMonth + (monthDiff - 1); i++) {
-        let currMonth = ((i + 12) % 12) + 1
-        totalDays += daysInMonth[currMonth]
-        console.error('1:', daysInMonth[currMonth])
-        
-        if (currMonth === 1 && isLeapYear(beginYear)) {
-            totalDays += 1
+    if (monthDiff > 0) {
+        for (let i = beginMonth; i < beginMonth + monthDiff; i++) {
+            let currMonth = i % 12 || 12
+            totalDays += daysInMonth[currMonth]
+            if (currMonth === 1) {
+                totalDays += getTotalByLeapYear(beginYear, endYear)
+            }
         }
     }
 
@@ -65,6 +60,16 @@ function dateTimeFormater(beginDate, endDate) {
 
 function isLeapYear(year) {
     return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0)
+}
+
+function getTotalByLeapYear(begin, end) {
+    let total = 0
+    for (let year = begin; year <= end; year++) {
+        if (isLeapYear(year)) {
+            total += 1
+        }
+    }
+    return total
 }
 
 function getTotalDaysPerYear(startYear, yearDiff) {
