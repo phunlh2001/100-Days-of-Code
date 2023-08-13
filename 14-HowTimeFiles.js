@@ -13,15 +13,15 @@ function dateTimeFormater(beginDate, endDate) {
     const [beginDay, beginMonth, beginYear] = beginDate.split(".").map(Number)
     const [endDay, endMonth, endYear] = endDate.split(".").map(Number)
 
-    const lastDayInMonth = {}
+    const daysInMonth = {}
     for (let i = 0; i < 12; i++) {
         const month = i + 1
         if (month === 2) {
-            lastDayInMonth[month] = 28
+            daysInMonth[month] = 28
         } else if (month === 4 || month === 6 || month === 9 || month === 11) {
-            lastDayInMonth[month] = 30
+            daysInMonth[month] = 30
         } else {
-            lastDayInMonth[month] = 31
+            daysInMonth[month] = 31
         }
     }
 
@@ -29,10 +29,9 @@ function dateTimeFormater(beginDate, endDate) {
     let monthDiff = endMonth - beginMonth
     let dayDiff = endDay - beginDay
 
-    
     if (dayDiff < 0) {
         monthDiff--
-        dayDiff += lastDayInMonth[beginMonth]
+        dayDiff += daysInMonth[beginMonth]
     }
     
     if (monthDiff < 0) {
@@ -44,8 +43,8 @@ function dateTimeFormater(beginDate, endDate) {
     
     for (let i = beginMonth - 1; i < beginMonth + (monthDiff - 1); i++) {
         let currMonth = ((i + 12) % 12) + 1
-        totalDays += lastDayInMonth[currMonth]
-        console.error('1:', lastDayInMonth[currMonth])
+        totalDays += daysInMonth[currMonth]
+        console.error('1:', daysInMonth[currMonth])
         
         if (currMonth === 1 && isLeapYear(beginYear)) {
             totalDays += 1
