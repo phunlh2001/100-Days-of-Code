@@ -1,81 +1,28 @@
-const BEGIN = readline();
-const END = readline();
-console.error(BEGIN, END)
+const BEGIN = readline()
+const END = readline()
 
-console.log(dateTimeFormater(BEGIN, END))
+console.log(dateTimeFormatter(BEGIN, END))
 
-function dateTimeFormater(beginDate, endDate) {
+function dateTimeFormatter(beginDate, endDate) {
     const [beginDay, beginMonth, beginYear] = beginDate.split(".").map(Number)
     const [endDay, endMonth, endYear] = endDate.split(".").map(Number)
 
-    const daysInMonth = {}
-    for (let i = 0; i < 12; i++) {
-        const month = i + 1
-        if (month === 2) {
-            daysInMonth[month] = 28
-        } else if (month === 4 || month === 6 || month === 9 || month === 11) {
-            daysInMonth[month] = 30
-        } else {
-            daysInMonth[month] = 31
-        }
-    }
+    const begin = new Date(beginYear, beginMonth - 1, beginDay).getTime()
+    const end = new Date(endYear, endMonth - 1, endDay).getTime()
 
-    let yearDiff = endYear - beginYear
-    let monthDiff = endMonth - beginMonth
-    let dayDiff = endDay - beginDay
-
-    if (dayDiff < 0) {
-        monthDiff--
-        dayDiff += daysInMonth[beginMonth]
-    }
-    
-    if (monthDiff < 0) {
-        yearDiff--
-        monthDiff += 12
-    }
-    
-    let totalDays = getTotalDaysPerYear(beginYear, yearDiff) + dayDiff
-    
-    if (monthDiff > 0) {
-        for (let i = beginMonth; i < beginMonth + monthDiff; i++) {
-            let currMonth = i % 12 || 12
-            totalDays += daysInMonth[currMonth]
-            if (currMonth === 1) {
-                totalDays += getTotalByLeapYear(beginYear, endYear)
-            }
-        }
-    }
+    const timeDiff = end - begin;
+    const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24))
+    const months = new Date(timeDiff).getUTCMonth()
+    const years = Math.floor(days / 365)
 
     let result = []
-    if (yearDiff > 0) {
-        result.push(`${yearDiff} ${yearDiff === 1 ? 'year' : 'years'}`);
+    if (years > 0) {
+        result.push(`${years} ${years === 1 ? 'year' : 'years'}`);
     }
-    if (monthDiff > 0) {
-        result.push(`${monthDiff} ${monthDiff === 1 ? 'month' : 'months'}`)
+    if (months > 0) {
+        result.push(`${months} ${months === 1 ? 'month' : 'months'}`)
     }
-    result.push(`total ${totalDays} ${totalDays === 1 ? 'day' : 'days'}`)
+    result.push(`total ${days} ${days === 1 ? 'day' : 'days'}`)
 
     return result.join(", ")
-}
-
-function isLeapYear(year) {
-    return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0)
-}
-
-function getTotalByLeapYear(begin, end) {
-    let total = 0
-    for (let year = begin; year <= end; year++) {
-        if (isLeapYear(year)) {
-            total += 1
-        }
-    }
-    return total
-}
-
-function getTotalDaysPerYear(startYear, yearDiff) {
-    let totalDays = 0
-    for (let year = startYear; year < startYear + yearDiff; year++) {
-        totalDays += (isLeapYear(year) ? 366 : 365)
-    }
-    return totalDays
 }
