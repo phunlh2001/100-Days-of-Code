@@ -15,8 +15,7 @@ class Tribute {
         this.killer = name
     }
     getMsg() {
-        const killedSort = this.killed.sort()
-        const killed = this.killed.length === 0 ? "None" : killedSort.join(", ")
+        const killed = this.killed.length === 0 ? "None" : this.killed.sort().join(", ")
         const killer = this.killer === null ? "Winner" : this.killer
         return `Name: ${this.name}\nKilled: ${killed}\nKiller: ${killer}`
     }
