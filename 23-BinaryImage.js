@@ -3,8 +3,7 @@ const grid = []
 const format = ['.', 'O']
 
 for (let i = 0; i < h; i++) {
-    const row = readline().split(' ').map(Number)
-                    .map((count, index) => format[index % 2].repeat(count)).join('')
+    const row = readline().split(' ').map(Number).map((count, index) => format[index % 2].repeat(count)).join('')
     grid.push(row)
 }
 
