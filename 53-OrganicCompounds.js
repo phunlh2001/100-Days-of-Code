@@ -1,7 +1,7 @@
 let c = [...new Array(+readline())].map(readline)
 let answer = 'VALID'
 
-loopWrapper:
+loop:
     for (let i = 0; i < c.length; i++) {
         const n = c[i].length
         for (let k = 0; k < n; k++) {
@@ -15,7 +15,7 @@ loopWrapper:
             if (c[i].slice(k - 2, k) === 'CH') {
                 if (N + UP + RIGHT + LEFT + DOWN !== 4) {
                     answer = 'INVALID'
-                    break loopWrapper
+                    break loop
                 }
             }
         }
