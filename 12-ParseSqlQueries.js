@@ -1,105 +1,49 @@
-/**
- * Auto-generated code below aims at helping you parse
- * the standard input according to the problem statement.
- **/
-const sqlQuery = readline();
-console.error(sqlQuery)
-const ROWS = parseInt(readline());
-const tableHeader = readline();
+const sqlQuery = readline()
+const ROWS = parseInt(readline())
+const tableHeader = readline().split(' ')
+const selectPart = sqlQuery.split('SELECT')[1].split('FROM')[0].trim()
+const selectedColumns = selectPart === '*' ? tableHeader : selectPart.split(',').map(col => col.trim())
+const wherePart = sqlQuery.includes('WHERE') ? sqlQuery.split('WHERE')[1].trim().split(' ') : null
+const orderByPart = sqlQuery.includes('ORDER BY') ? sqlQuery.split('ORDER BY')[1].trim().split(' ') : null
 
-const tableRows = []
+const selectedColumnIndexes = selectedColumns.map(col => tableHeader.indexOf(col))
+const filteredTableHeader = selectedColumnIndexes.map(index => tableHeader[index])
+const filterTableRows = []
+
 for (let i = 0; i < ROWS; i++) {
-    const tableRow = readline()
-    tableRows.push(tableRow)
-}
+    const row = readline().split(' ')
+    let shouldInclude = true
 
-parseQuery(sqlQuery, tableHeader, tableRows)
+    if (wherePart) {
+        const conditionColumnIndex = tableHeader.indexOf(wherePart[0].trim())
+        shouldInclude = row[conditionColumnIndex] === wherePart[2].trim()
+    }
 
-function parseQuery(query, header, rows) {
-    if (query.includes('ORDER BY')) {
-        if (query.includes('WHERE')) {
-            const match = query.match(/SELECT (.+) FROM (.+) WHERE (.+) ORDER BY (.+) DESC/)
-            const selectNames = match[1].split(', ')
-            const [key, value] = match[3].split(' = ')
-            const orderByColumn = match[4]
-    
-            const mapCondition = { [key]: value }
-            const selectedIndices = []
-            header.split(' ').forEach((columnName, index) => {
-                if (selectNames.includes(columnName)) {
-                    selectedIndices.push(index)
-                }
-            })
-    
-            const filteredRows = []
-            rows.forEach(row => {
-                const values = row.split(' ')
-                let satisfiesCondition = true
-    
-                Object.keys(mapCondition).forEach(conditionKey => {
-                    const conditionValue = mapCondition[conditionKey]
-                    const columnIndex = header.split(' ').indexOf(conditionKey)
-    
-                    if (values[columnIndex] !== conditionValue) {
-                        satisfiesCondition = false
-                    }
-                })
-    
-                if (satisfiesCondition) {
-                    const selectedValues = selectedIndices.map(index => values[index])
-                    filteredRows.push({ values: selectedValues, originalRow: row })
-                }
-            })
-    
-            const orderByIndex = header.split(' ').indexOf(orderByColumn)
-            const sortedRows = filteredRows.sort((a, b) => {
-                const aValue = parseFloat(a.values[orderByIndex])
-                const bValue = parseFloat(b.values[orderByIndex])
-                return bValue - aValue // Sort in descending order
-            })
-    
-            console.log(header)
-            sortedRows.forEach(row => {
-                console.log(row.originalRow)
-            })
-        } else {
-            
-        }
-    } else if (query.includes('*')) {
-        console.log(header)
-        rows.forEach(item => console.log(item))
-    } else if (query.includes('WHERE')) {
-        // ignore element of second (.+)
-        const match = query.match(/SELECT (.+) FROM (.+) WHERE (.+)/)
-        const selectNames = match[1].split(', ')
-        const [key, value] = match[3].split(' = ')
-
-        const mapCondition = { [key]: value }
-        const selectedIndices = []
-        header.split(' ').forEach((columnName, index) => {
-            if (selectNames.includes(columnName)) {
-                selectedIndices.push(index)
-            }
-        })
-
-        console.log(selectNames.join(' '))
-        rows.forEach(row => {
-            const values = row.split(' ')
-            let satisfiesCondition = true
-
-            Object.keys(mapCondition).forEach(conditionKey => {
-                const conditionValue = mapCondition[conditionKey]
-                const columnIndex = header.split(' ').indexOf(conditionKey)
-
-                if (values[columnIndex] !== conditionValue) {
-                    satisfiesCondition = false
-                }
-            })
-
-            if (satisfiesCondition) {
-                const selectedValues = selectedIndices.map(index => values[index])
-                console.log(selectedValues.join(' '))
-            }
-        })
+    if (shouldInclude) {
+        filterTableRows.push(selectedColumnIndexes.map(index => {
+            const value = row[index]
+            return value !== undefined ? (!isNaN(value) ? parseFloat(value) : value) : null
+        }));
     }
 }
+
+if (orderByPart) {
+    const orderByColumnIndex = tableHeader.indexOf(orderByPart[0].trim());
+    const sortOrder = orderByPart[1].trim().toUpperCase() === 'DESC' ? -1 : 1
+
+    filterTableRows.sort((a, b) => {
+        const aValue = a[orderByColumnIndex]
+        const bValue = b[orderByColumnIndex]
+
+        if (aValue === bValue) return 0
+
+        if (aValue === null || aValue === undefined) return sortOrder
+
+        if (bValue === null || bValue === undefined) return -sortOrder
+
+        return aValue < bValue ? -sortOrder : sortOrder
+    })
+}
+
+console.log(filteredTableHeader.join(' '))
+filterTableRows.forEach(row => console.log(row.join(' ')))
