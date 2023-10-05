@@ -1,41 +1,32 @@
+// medium - https://www.codingame.com/ide/puzzle/the-optimal-urinal-problem
+
 const n = parseInt(readline())
-const totals = new Map()
+const totals = []
 
-if (n === 3 || n === 4) {
-    return console.log("2 1")
-}
+let max = 1, spot = 1
 
-let max = 1;
-let spot = 1;
-
-for (let i = 0; i <= n / 2; i++) {
+for (let i = 0; i <= Math.floor(n / 2); i++) {
     const sum =
-        (i <= 1 ? 2 : 3) +
-        (totals.has(i) ? totals.get(i) : calcSpot(0, i)) +
-        (totals.has(n - i - 1) ? totals.get(n - i - 1) : calcSpot(i, n - 1))
+        (i > 1 ? 3 : 2) +
+        (totals[i] ? totals[i] : calcSpot(0, i)) +
+        (totals[n - 1 - i] ? totals[n - 1 - i] : calcSpot(i, n - 1))
 
     if (max < sum) {
         max = sum
-        spot = i + 1
+        spot = i
     }
 }
 
-console.log(`${max} ${spot}`)
+console.log(`${max} ${spot + 1}`)
 
 function calcSpot(start, end) {
     const distance = end - start
 
-    if (distance <= 3) {
-        return 0
-    }
-
-    if (totals.has(distance)) {
-        return totals.get(distance)
-    }
-
-    const mid = Math.floor((start + end) / 2)
-    const nb = 1 + calcSpot(start, mid) + calcSpot(mid, end)
+    if (distance <= 3) return 0
+    if (totals[distance]) return totals[distance]
     
-    totals.set(distance, nb)
-    return nb
+    const mid = Math.floor((start + end) / 2)
+    totals[distance] = 1 + calcSpot(start, mid) + calcSpot(mid, end)
+    
+    return totals[distance]
 }
