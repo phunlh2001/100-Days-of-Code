@@ -1,3 +1,5 @@
+// meidum - https://www.codingame.com/training/medium/dwarfs-standing-on-the-shoulders-of-giants
+
 const n = parseInt(readline())
 const map = []
 
