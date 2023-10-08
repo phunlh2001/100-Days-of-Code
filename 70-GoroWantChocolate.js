@@ -1,8 +1,7 @@
 // Medium - https://www.codingame.com/training/medium/goro-want-chocolate
-var [h, w] = readline().split(' ').map(Number)
-let squared
 
-squared = new Array(h + 1).fill(null).map(() => new Array(w + 1).fill(0))
+var [h, w] = readline().split(' ').map(Number)
+let squared = new Array(h + 1).fill(null).map(() => new Array(w + 1).fill(0))
 
 console.log(calc(h, w))
 
