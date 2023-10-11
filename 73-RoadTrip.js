@@ -1,4 +1,4 @@
-// Medium -
+// Medium - https://www.codingame.com/training/medium/road-trip
 
 class Friend {
   constructor(budget, joy) {
