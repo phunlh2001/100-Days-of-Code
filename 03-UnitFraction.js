@@ -14,7 +14,6 @@ for (let i=1; i<=n; i++) {
     let x = numerator / denominator
     // only receive 'x' value as an integer
     if (Number.isInteger(x)) {
-        console.error('i:', i)
         console.log(`1/${n} = 1/${x} + 1/${y}`)
     }
 }
